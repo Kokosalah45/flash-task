@@ -18,7 +18,6 @@ export class AuthController {
         });
         return res.send({
             user : payload.user
-        
         });
     }
 

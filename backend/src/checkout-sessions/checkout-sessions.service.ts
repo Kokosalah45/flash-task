@@ -1,25 +1,38 @@
-import { Injectable } from '@nestjs/common';
-
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PaymentToken } from './interfaces/payment-token.interface';
 
 @Injectable()
 export class CheckoutSessionsService {
-  create(createCheckoutSessionDto) {
-    return 'This action adds a new checkoutSession';
-  }
+  constructor(private readonly configService: ConfigService) {}
 
-  findAll() {
-    return `This action returns all checkoutSessions`;
-  }
+  async getPaymentToken(): Promise<PaymentToken> {
+    // const clientID = this.configService.get('PAYMENT_CLIENT_ID');
+    // const clientSecret = this.configService.get('PAYMENT_CLIENT_SECRET');
 
-  findOne(id: number) {
-    return `This action returns a #${id} checkoutSession`;
-  }
+    // const base64EncodedKey = Buffer.from(
+    //   `${clientID}:${clientSecret}`,
+    // ).toString('base64');
 
-  update(id: number) {
-    return `This action updates a #${id} checkoutSession`;
-  }
+    // const token = await fetch('dummy-url', {
+    //   method: 'POST',
+    //   headers: {
+    //     Authorization: `Basic ${base64EncodedKey}`,
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   body: 'grant_type=client_credentials',
+    // });
 
-  remove(id: number) {
-    return `This action removes a #${id} checkoutSession`;
+    // if (!token.ok) {
+    //   throw new ServiceUnavailableException();
+    // }
+
+    // const tokenData = await token.json();
+
+    return {
+      access_token: 'oeuhgpbababvubaubvapudbf',
+      expires_in: 3600,
+      token_type: 'Bearer',
+    };
   }
 }
