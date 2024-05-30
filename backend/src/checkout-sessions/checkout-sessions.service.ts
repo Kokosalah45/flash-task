@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCheckoutSessionDto } from './dto/create-checkout-session.dto';
-import { UpdateCheckoutSessionDto } from './dto/update-checkout-session.dto';
+
 
 @Injectable()
 export class CheckoutSessionsService {
-  create(createCheckoutSessionDto: CreateCheckoutSessionDto) {
+  create(createCheckoutSessionDto) {
     return 'This action adds a new checkoutSession';
   }
 
@@ -16,7 +15,7 @@ export class CheckoutSessionsService {
     return `This action returns a #${id} checkoutSession`;
   }
 
-  update(id: number, updateCheckoutSessionDto: UpdateCheckoutSessionDto) {
+  update(id: number) {
     return `This action updates a #${id} checkoutSession`;
   }
 
