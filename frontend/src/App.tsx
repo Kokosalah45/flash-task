@@ -1,10 +1,16 @@
+import { Route, Routes } from 'react-router';
 import './App.css';
-import { useAuth } from './providers/AuthContext';
+import HomePage from './pages/HomePage';
+import MainLayout from './layout/MainLayout';
 
 function App() {
-  const { state } = useAuth();
-
-  return <div>{state}</div>;
+  return (
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<HomePage />} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
