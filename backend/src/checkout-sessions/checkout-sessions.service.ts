@@ -5,7 +5,6 @@ import { CreateCheckoutSessionDTO } from './dto/create-checkout-session.dto';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from 'src/auth/auth.service';
 import { ProductsService } from 'src/products/products.service';
-import crypto from 'node:crypto';
 @Injectable()
 export class CheckoutSessionsService {
   constructor(
@@ -72,7 +71,7 @@ export class CheckoutSessionsService {
     //   throw new ServiceUnavailableException();
     // }
     // const data = await order.json();
-    const randomPaymentToken = crypto.randomBytes(16).toString('hex');
+    const randomPaymentToken = 'asoiszkghsdilhufgb';
     const data = {
       order: {
         id: '927592534',
@@ -84,7 +83,7 @@ export class CheckoutSessionsService {
           phoneNumber: '01211111111',
         },
         amountCents: 100,
-        paymentLink: `http://localhost:3000/mocks/payment-gateway/${randomPaymentToken}`,
+        paymentLink: `http://localhost:3000/mocks/payment-gateway/?token=${randomPaymentToken}`,
         createdAt: '2023-08-06T18:14:55.230Z',
         updatedAt: '2023-08-06T18:14:55.230Z',
         status: 'pending',
