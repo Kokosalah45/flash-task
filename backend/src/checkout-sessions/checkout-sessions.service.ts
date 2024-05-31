@@ -1,16 +1,18 @@
-import { Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PaymentToken } from './interfaces/payment-token.interface';
 import { CreateCheckoutSessionDTO } from './dto/create-checkout-session.dto';
 import { UsersService } from 'src/users/users.service';
-import { JwtService } from '@nestjs/jwt';
-
+import { AuthService } from 'src/auth/auth.service';
+import { ProductsService } from 'src/products/products.service';
+import crypto from 'node:crypto';
 @Injectable()
 export class CheckoutSessionsService {
   constructor(
     private readonly configService: ConfigService,
     private readonly userService: UsersService,
-    private readonly jwtService: JwtService,
+    private readonly authService: AuthService,
+    private readonly productsService: ProductsService,
   ) {}
 
   async getPaymentToken(): Promise<PaymentToken> {
@@ -48,13 +50,15 @@ export class CheckoutSessionsService {
     paymentToken: string,
     userToken: string,
   ) {
-    // HERE I SHOULD GET THE PRODUCT IDS
-    // QUERY THE DATABASE FOR THE PRODUCTS
-    // CALCULATE THE TOTAL AMOUNT
-    // CREATE AN ORDER
-    // SEND THE ORDER TO THE PAYMENT GATEWAY
+    // const userInfo = this.authService.verifyToken(userToken);
 
-    const userInfo = this.jwtService.verify(userToken);
+    // const products = this.productsService.getProductsByIds(
+    //   createOrderDto.productIDs,
+    // );
+
+    // const totalAmount = products.reduce((acc, product) => {
+    //   return acc + product.price;
+    // }, 0);
 
     // const order = await fetch('dummy-url', {
     //   method: 'POST',
@@ -68,23 +72,28 @@ export class CheckoutSessionsService {
     //   throw new ServiceUnavailableException();
     // }
     // const data = await order.json();
+    const randomPaymentToken = crypto.randomBytes(16).toString('hex');
     const data = {
       order: {
-        id: 'string',
-        merchantId: 'string',
-        aggregatorOrderId: 'string',
-        description: 'string',
+        id: '927592534',
+        merchantId: '405840',
+        aggregatorOrderId: '345201231',
+        description: 'description',
         billingInfo: {
-          customerName: 'string',
-          phoneNumber: 'string',
+          customerName: 'kerolous',
+          phoneNumber: '01211111111',
         },
         amountCents: 100,
-        paymentLink: 'https://payments.example.com/JSXET',
+        paymentLink: `http://localhost:3000/mocks/payment-gateway/${randomPaymentToken}`,
         createdAt: '2023-08-06T18:14:55.230Z',
         updatedAt: '2023-08-06T18:14:55.230Z',
         status: 'pending',
       },
     };
-    return data;
+    // delete payment link
+    // save order status to db
+    return {
+      paymentLink: data.order.paymentLink,
+    };
   }
 }

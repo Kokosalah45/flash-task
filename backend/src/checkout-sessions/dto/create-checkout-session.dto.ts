@@ -1,4 +1,4 @@
 export class CreateCheckoutSessionDTO {
-  productIDs: string[];
+  productIDs: number[];
   currency: string;
 }
