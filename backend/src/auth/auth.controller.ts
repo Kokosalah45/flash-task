@@ -11,21 +11,30 @@ export class AuthController {
   @Post('signin')
   async signin(@Body() body: SiginDTO, @Res() res: Response) {
     const payload = await this.authService.signIn(body);
-    res.cookie('token', payload.access_token, {
+
+    res.cookie('AUTH_TOKEN', payload.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
+      domain: 'localhost',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
+
     return res.send({
-      user: payload.user,
+      user: {
+        name: payload.user.name,
+        email: payload.user.email,
+      },
     });
   }
 
   @isAuthedGuard()
   @Get('signout')
   signout(@Res() res: Response) {
-    res.clearCookie('token', {
+    res.clearCookie('AUTH_TOKEN', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
+      domain: 'localhost',
+      maxAge: 0,
     });
 
     return res.send({
@@ -36,10 +45,14 @@ export class AuthController {
   @isAuthedGuard()
   @Get('me')
   async me(@Req() req: Request) {
-    const token = req.cookies['token'];
+    const token = req.cookies['AUTH_TOKEN'];
     const payload = await this.authService.verifyToken(token);
+    console.log({ payload });
     return {
-      user: payload,
+      user: {
+        name: payload.name,
+        email: payload.email,
+      },
     };
   }
 }

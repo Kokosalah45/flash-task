@@ -15,7 +15,9 @@ export class AuthService {
     if (!user || user.password !== payload.password) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const accessToken = await this.jwtService.signAsync(user);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = user;
+    const accessToken = await this.jwtService.signAsync(userWithoutPassword);
 
     return {
       access_token: accessToken,
