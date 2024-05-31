@@ -1,26 +1,27 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { CheckoutSessionsModule } from './checkout-sessions/checkout-sessions.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { UsersService } from './users/users.service';
+import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { ProductsModule } from './products/products.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
-
-const configService = new ConfigService();
+import { AppService } from './app.service';
+import { join } from 'path';
 
 @Module({
-  imports: [CheckoutSessionsModule, AuthModule , ConfigModule.forRoot(
-    {isGlobal : true}
-  ),  
-  JwtModule.register({
-    global: true,
-    secret: configService.get('TOKEN_SECRET'),
-    signOptions: { expiresIn: configService.get('TOKEN_EXPIRATION') , algorithm: configService.get('TOKEN_HASH_METHOD')},
-  }), UsersModule,],
+  imports: [
+    CheckoutSessionsModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
+    UsersModule,
+    ProductsModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, UsersService],
+  providers: [AppService],
 })
 export class AppModule {}
