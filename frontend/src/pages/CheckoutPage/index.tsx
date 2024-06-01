@@ -2,17 +2,9 @@ import Page from '@/components/layout/Page';
 import { FlashPaymentProvider } from '@/features/FlashPayment/FlashPaymentProvider';
 import FlashPaymentButton from '@/features/FlashPayment/components/FlashPaymentButton';
 import FlashPaymentModal from '@/features/FlashPayment/components/FlashPaymentEmbeddedCheckout';
-import { useAuth } from '@/providers/AuthContext';
 import { startCheckoutSession } from '@/services/data/checkout-session/startCheckoutSession';
-import { Navigate } from 'react-router';
 
 const CheckoutPage = () => {
-  const { authState } = useAuth();
-
-  if (authState === 'unauthenticated') {
-    return <Navigate to="/login" />;
-  }
-
   return (
     <Page className="flex justify-center items-center">
       <div className="flex border-2 border-gray-300 p-5 rounded-md">

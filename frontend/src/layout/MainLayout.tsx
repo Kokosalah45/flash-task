@@ -23,16 +23,14 @@ const MainLayout = () => {
                 Login
               </Link>
             ) : (
-              <>
-                <Link
-                  className="bg-slate-300 hover:bg-slate-400 transition-all rounded-md px-3 py-2"
-                  to="/checkout"
-                >
-                  Checkout
-                </Link>
-                <Button onClick={logout}>Logout</Button>
-              </>
+              <Button onClick={logout}>Logout</Button>
             )}
+            <Link
+              className="bg-slate-300 hover:bg-slate-400 transition-all rounded-md px-3 py-2"
+              to="/checkout"
+            >
+              Checkout
+            </Link>
           </div>
         }
       />
