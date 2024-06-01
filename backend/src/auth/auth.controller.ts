@@ -15,7 +15,6 @@ export class AuthController {
     res.cookie('AUTH_TOKEN', payload.access_token, {
       httpOnly: true,
       secure: false,
-      domain: 'localhost',
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -28,12 +27,11 @@ export class AuthController {
   }
 
   @isAuthedGuard()
-  @Get('signout')
+  @Post('signout')
   signout(@Res() res: Response) {
     res.clearCookie('AUTH_TOKEN', {
       httpOnly: true,
       secure: false,
-      domain: 'localhost',
       maxAge: 0,
     });
 
@@ -47,7 +45,6 @@ export class AuthController {
   async me(@Req() req: Request) {
     const token = req.cookies['AUTH_TOKEN'];
     const payload = await this.authService.verifyToken(token);
-    console.log({ payload });
     return {
       user: {
         name: payload.name,

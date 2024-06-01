@@ -19,7 +19,7 @@ export class CheckoutSessionsController {
   ) {
     const paymentToken = await this.checkoutSessionsService.getPaymentToken();
 
-    const userToken = req.cookies['token'];
+    const userToken = req.cookies['AUTH_TOKEN'];
 
     const orderData = await this.checkoutSessionsService.createOrder(
       createCheckoutSessionDto,

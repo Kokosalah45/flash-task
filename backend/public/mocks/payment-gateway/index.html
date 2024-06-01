@@ -1,11 +1,150 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    hello world
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/mocks/payment-gateway/styles/reset.css" />
+  <link rel="stylesheet" href="/mocks/payment-gateway/styles/main.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"></script>
+</head>
+
+<body>
+  <div class="container" x-data="payment">
+    <div x-show="canShowForm" class="payment-container">
+      <section class="flex-1 flex flex-column space-around">
+        <header style="margin-bottom: 1rem;">
+          <img src="/mocks/payment-gateway/assets/images/flash-arrows.png" style="margin-bottom: 1rem;" alt="">
+          <h2 class="header flex" :class="stage === 'scan' ? 'flex-row' : 'flex-column'" style="margin-bottom: .5rem;">
+
+            <div style="margin-inline-end: .3rem;" x-show="stage === 'phone'">
+              <span>Hey there!</span>
+              <span> pay with <img style="object-fit: contain;"
+                  src="/mocks/payment-gateway/assets/images/flash-logo.png" alt=""></span>
+            </div>
+
+            <div x-show="stage === 'scan' && userData !== null">
+              <span>Almost there, <span x-text="userData.name"></span></span>
+            </div>
+
+            <div x-show="stage === 'scan' && userData === null">
+              <span>Hey there!</span>
+            </div>
+          </h2>
+        </header>
+
+        <section class="flex flex-column flex-1 space-between">
+          <form id="payment-form" x-show="stage === 'phone'" class="flex-1 flex flex-column space-between"
+            @submit.prevent="handleSubmit">
+
+            <div class="flex flex-column gap-1">
+              <div class="flex flex-column">
+                <label for="phone-number">What's your phone number?</label>
+                <input required id="phone-number" name="phoneNumber" type="text" class="phone-input"
+                  placeholder="01xxxxxxxxx" />
+                <p>Enter the number linked to your Flash account</p>
+              </div>
+
+              <div class="discount-info">
+                <img src="/mocks/payment-gateway/assets/images/icon.png" width="15" height="15" alt="discount_icon"
+                  style="margin-inline-end : .3rem">
+                <p>Get 20% off on your first payment </p>
+              </div>
+            </div>
+
+            <button class="btn" type="submit">Next</button>
+          </form>
+
+
+          <div x-show="stage === 'scan'" class="flex flex-column flex-1 space-between" style="margin-bottom: .3rem;">
+            <div>
+              <p x-show="userData === null" style="margin-bottom: 2rem;">
+                Seems like you don't have Flash app. <span class="bold">Scan this qr code to download it, create an
+                  account and pay the easy way!</span>
+
+              <p x-show="userData !== null" style="margin-bottom: 2rem;">
+                Scan this qr code with the Flash app and the payment process will be over in a flash! <span
+                  class="bold">Just like that!</span>
+              </p>
+
+              <div x-show="stage === 'scan'" class="discount-info ">
+                <img style="margin-inline-end: .3rem;" src="/mocks/payment-gateway/assets/images/icon.png" width="20"
+                  height="20" alt="">
+                <p>Get 20% off on your first payment </p>
+              </div>
+            </div>
+
+            <div class="flex flex-column gap-1" x-show="userData !== null">
+              <div class="flex items-center">
+                <img src="/mocks/payment-gateway/assets/images/error_24px.png" width="20" height="20" alt="">
+                <p style="margin-inline-start: .3rem;">Make sure you paid before confirming</p>
+              </div>
+              <button class="btn">Confirm</button>
+            </div>
+          </div>
+
+
+        </section>
+
+      </section>
+      <section class="flex items-start justify-center" x-show="stage === 'scan'">
+
+        <img class="p-2 qr-image" width="210" height="210"
+          :src="qrCode"
+          alt="QR code" />
+
+      </section>
+    </div>
+    <div x-show="!canShowForm" >
+      invalid token
+    </div>
+
+  </div>
+  </div>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('payment', () => ({
+
+        canShowForm : false,
+        stage: 'phone',
+        userData: null,
+        qrCode : null,
+        init() {
+          const token = window.location.search.split('token=')[1];
+          if (token) {
+            this.canShowForm = true;
+            this.qrCode = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=flash://pay/?token=' + token;
+            return
+          }
+        },
+        handleSubmit(e) {
+          const formData = new FormData(e.currentTarget);
+          const phoneNumber = formData.get('phoneNumber');
+          const isValidEgyNumber = /^01[0-2]{1}[0-9]{8}$/.test(phoneNumber);
+
+          if (!isValidEgyNumber) {
+            alert('Please enter a valid Egyptian phone number');
+            return;
+          }
+          const isRegistered = Math.random() > 0.5;
+
+          if (isRegistered) {
+            this.userData = {
+              name: 'kero',
+              email: 'kerolous.amged@gmail.com',
+              phone: '01000000000',
+            };
+          }
+          this.stage = 'scan';
+        },
+      }));
+    });
+  </script>
+</body>
+
 </html>
