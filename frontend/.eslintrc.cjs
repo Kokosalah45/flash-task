@@ -5,8 +5,12 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:react/recommended',
+    'plugin:testing-library/react',
+    'plugin:vitest/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
   rules: {
@@ -15,4 +19,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
-}
+  globals: {
+    ...vitest.environments.env.globals,
+  },
+};

@@ -8,6 +8,8 @@ export type LoginBody = {
 export type UserSessionData = {
   name: string;
   email: string;
+  phone_number: string;
+  id: number;
 };
 
 export const signin = async (body: LoginBody) => {
