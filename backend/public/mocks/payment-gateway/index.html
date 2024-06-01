@@ -27,12 +27,13 @@
                   src="/mocks/payment-gateway/assets/images/flash-logo.png" alt=""></span>
             </div>
 
-            <div x-show="stage === 'scan' && userData !== null">
-              <span>Almost there, <span x-text="userData.name"></span></span>
-            </div>
-
-            <div x-show="stage === 'scan' && userData === null">
-              <span>Hey there!</span>
+            <div x-show="stage === 'scan'">
+              <span x-show="userData !== null">
+                <span>Almost there, <span x-text="userData.name"></span></span>
+              </span>
+              <span x-show="userData === null"">
+                <span>Hey there!</span>
+              </span>
             </div>
           </h2>
         </header>
@@ -116,7 +117,10 @@
         qrCode : null,
         init() {
           const token = window.location.search.split('token=')[1];
+
           if (token) {
+            // also call the payment gateway to validate the token
+            // get necessary data also
             this.canShowForm = true;
             this.qrCode = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=flash://pay/?token=' + token;
             return
