@@ -1,8 +1,18 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { isAuthedGuard } from './guards/auth.guard';
 import { Request, Response } from 'express';
 import { SiginDTO } from './dtos/sigin-dto';
+import { MeDTO } from './dtos/me-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,16 +50,15 @@ export class AuthController {
     });
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @isAuthedGuard()
   @Get('me')
   async me(@Req() req: Request) {
     const token = req.cookies['AUTH_TOKEN'];
-    const payload = await this.authService.verifyToken(token);
+    const user = await this.authService.getUser(token);
+    const me = new MeDTO(user);
     return {
-      user: {
-        name: payload.name,
-        email: payload.email,
-      },
+      user: me,
     };
   }
 }

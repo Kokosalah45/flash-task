@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PaymentToken } from './interfaces/payment-token.interface';
-import { CreateCheckoutSessionDTO } from './dto/create-checkout-session.dto';
+import { PaymentToken } from './entities/payment-token.entity';
+import { CreateCheckoutSessionDTO } from './dto/create-checkout-session-body.dto';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from 'src/auth/auth.service';
 import { ProductsService } from 'src/products/products.service';
+import { randomBytes } from 'node:crypto';
 @Injectable()
 export class CheckoutSessionsService {
   constructor(
@@ -49,7 +50,9 @@ export class CheckoutSessionsService {
     paymentToken: string,
     userToken: string,
   ) {
-    // const userInfo = this.authService.verifyToken(userToken);
+    // const aggregatorID = this.configService.get('AGGREGATOR_ID');
+    // const merhcantID = this.configService.get('MERCHANT_ID');
+    // const userInfo = await this.authService.verifyToken(userToken);
 
     // const products = this.productsService.getProductsByIds(
     //   createOrderDto.productIDs,
@@ -59,19 +62,37 @@ export class CheckoutSessionsService {
     //   return acc + product.price;
     // }, 0);
 
+    // let billingInfo = {};
+
+    // if (userInfo) {
+    //   billingInfo = {
+    //     customerName: userInfo.name,
+    //     phoneNumber: userInfo.phone_number,
+    //   };
+    // }
+    // const body = {
+    //   merchantId: '405840',
+    //   aggregatorOrderId: '345201231',
+    //   description: 'description',
+    //   billingInfo,
+    //   amountCents: 100,
+    // };
+
     // const order = await fetch('dummy-url', {
     //   method: 'POST',
     //   headers: {
     //     Authorization: `Bearer ${paymentToken}`,
     //     'Content-Type': 'application/json',
     //   },
-    //   body: JSON.stringify(createOrderDto),
+    //   body: JSON.stringify(body),
     // });
+
     // if (!session.ok) {
     //   throw new ServiceUnavailableException();
     // }
     // const data = await order.json();
-    const randomPaymentToken = 'asoiszkghsdilhufgb';
+
+    const randomPaymentToken = randomBytes(32).toString('hex');
     const data = {
       order: {
         id: '927592534',
@@ -84,15 +105,12 @@ export class CheckoutSessionsService {
         },
         amountCents: 100,
         paymentLink: `http://localhost:3000/mocks/payment-gateway/?token=${randomPaymentToken}`,
-        createdAt: '2023-08-06T18:14:55.230Z',
-        updatedAt: '2023-08-06T18:14:55.230Z',
+        createdAt: new Date('2023-08-06T18:14:55.230Z'),
+        updatedAt: new Date('2023-08-06T18:14:55.230Z'),
         status: 'pending',
       },
     };
-    // delete payment link
-    // save order status to db
-    return {
-      paymentLink: data.order.paymentLink,
-    };
+
+    return data;
   }
 }

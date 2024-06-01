@@ -1,7 +1,7 @@
-import {IsEmail , Length} from 'class-validator'
+import { IsEmail, Length } from 'class-validator';
 export class SiginDTO {
-    @IsEmail()
-    email: string;
-    @Length(6, 20)
-    password: string;
+  @IsEmail()
+  email: string;
+  @Length(3, 20)
+  password: string;
 }
