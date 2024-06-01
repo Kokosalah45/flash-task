@@ -3,26 +3,8 @@ import { FlashPaymentProvider } from '@/features/FlashPayment/FlashPaymentProvid
 import FlashPaymentButton from '@/features/FlashPayment/components/FlashPaymentButton';
 import FlashPaymentModal from '@/features/FlashPayment/components/FlashPaymentEmbeddedCheckout';
 import { useAuth } from '@/providers/AuthContext';
+import { startCheckoutSession } from '@/services/data/checkout-session/startCheckoutSession';
 import { Navigate } from 'react-router';
-
-const getPaymentLink = async () => {
-  const response = await fetch('http://localhost:3000/api/checkout-sessions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({
-      productIDs: [1, 2, 3],
-      currency: 'usd',
-    }),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to fetch payment link');
-  }
-  const data = await response.json();
-  return data.paymentLink;
-};
 
 const CheckoutPage = () => {
   const { authState } = useAuth();
@@ -49,7 +31,7 @@ const CheckoutPage = () => {
         <div>
           <h3 className="mb-5">payment vendors</h3>
           <div>
-            <FlashPaymentProvider fetchPromise={getPaymentLink}>
+            <FlashPaymentProvider fetchPromise={startCheckoutSession}>
               <FlashPaymentButton />
               <FlashPaymentModal />
             </FlashPaymentProvider>

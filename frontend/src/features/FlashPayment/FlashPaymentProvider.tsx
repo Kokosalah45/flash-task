@@ -32,8 +32,6 @@ export const FlashPaymentProvider = ({
   const startPaymentSession = async () => {
     try {
       const paymentLink = await fetchPromise();
-      console.log(paymentLink);
-
       setPaymentLink(paymentLink);
     } catch (error) {
       console.error(error);
