@@ -1,12 +1,17 @@
 import { Link } from 'react-router-dom';
 
-const links = [
+const defaultLinks = [
   { to: '/', label: 'Home' },
   { to: '/checkout', label: 'Checkout' },
   { to: '/signin', label: 'Sign in' },
 ];
 
-const Navbar = () => {
+type Link = {
+  to: string;
+  label: string;
+};
+
+const Navbar = ({ links = defaultLinks }: { links?: Link[] }) => {
   return (
     <nav>
       <ul className="flex gap-5">

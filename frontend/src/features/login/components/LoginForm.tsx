@@ -10,11 +10,15 @@ import {
 import { Input } from '@/components/ui/input';
 
 import { useLoginForm } from '../hooks/useLoginForm';
-// import { useAuth } from '@/providers/AuthContext';
+import { useAuth } from '@/providers/AuthContext';
 
 const LoginForm = () => {
-  //   const { login } = useAuth();
-  const { form, onSubmit } = useLoginForm();
+  const { login } = useAuth();
+  const { form } = useLoginForm();
+
+  const onSubmit = (data: { email: string; password: string }) => {
+    login(data);
+  };
 
   return (
     <Form {...form}>
@@ -24,7 +28,7 @@ const LoginForm = () => {
       >
         <FormField
           control={form.control}
-          name="username"
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
@@ -43,7 +47,7 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="password" {...field} />
+                <Input type="password" placeholder="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

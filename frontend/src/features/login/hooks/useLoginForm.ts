@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const formSchema = z.object({
-  username: z.string().min(2, {
+  email: z.string().email({
     message: 'Username must be at least 2 characters.',
   }),
-  password: z.string().min(8, {
-    message: 'Password must be at least 8 characters.',
+  password: z.string().min(3, {
+    message: 'Password must be at least 3 characters.',
   }),
 });
 
@@ -15,16 +15,12 @@ const useLoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
-
-  return { form, onSubmit };
+  return { form };
 };
 
 export { useLoginForm };

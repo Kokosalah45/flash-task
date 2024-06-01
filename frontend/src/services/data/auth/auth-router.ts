@@ -1,5 +1,5 @@
-import { baseRouter } from '../base-router';
+import { BASE_URL, baseRouter } from '../base-router';
 
 export const authRouter = baseRouter.extend({
-  prefixUrl: '/auth',
+  prefixUrl: `${BASE_URL}/auth`,
 });
